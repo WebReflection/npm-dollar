@@ -14,7 +14,7 @@ if (argv.length) {
   };
   var exe = argv[0].split('.').reduce(
     function (o, k) { return o[k]; },
-    package.$ || package.scripts
+    package.$ || package['npm-dollar'] || package.scripts
   );
   if (typeof exe === 'string' && /^\S+$/.test(exe)) {
     spawn(

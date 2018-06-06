@@ -12,10 +12,10 @@ Following a configuration example:
 // inside the package.json file
 {
   "devDependencies": {
-    "node-dollar": "latest"
+    "npm-dollar": "latest"
   },
   "scripts": {
-    "$": "node-dollar"
+    "$": "npm-dollar"
   },
   "$": {
     "cat": {
