@@ -2,11 +2,16 @@
 
 var path = require('path');
 var argv = process.argv.slice(2);
+var cwd = process.cwd();
 
 if (argv.length) {
   var spawn = require('child_process').spawn;
-  var package = require(path.join(process.cwd(), 'package.json'));
-  var how = {stdio: 'inherit'};
+  var package = require(path.join(cwd, 'package.json'));
+  var how = {
+    cwd: cwd,
+    env: process.env,
+    stdio: 'inherit'
+  };
   var exe = argv[0].split('.').reduce(
     function (o, k) { return o[k]; },
     package.$ || package.scripts
