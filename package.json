@@ -2,7 +2,9 @@
   "name": "npm-dollar",
   "version": "0.0.0",
   "description": "A package.json scripts helper.",
-  "bin": "index.js",
+  "bin": {
+    "npm-dollar": "index.js"
+  },
   "$": {
     "greetings": "echo Hello $(tput bold)\\$$(tput sgr0) !!!"
   },
@@ -18,5 +20,14 @@
     "bash"
   ],
   "author": "Andrea Giammarchi",
-  "license": "ISC"
+  "license": "ISC",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WebReflection/node-dollar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WebReflection/node-dollar/issues"
+  },
+  "homepage": "https://github.com/WebReflection/node-dollar#readme"
 }

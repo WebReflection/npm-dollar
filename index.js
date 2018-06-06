@@ -28,7 +28,7 @@ if (argv.length) {
     'package.json'
   ));
   console.log('\x1b[1m' + package.name + '\x1b[0m ' + package.version);
-  console.log(package.repository.url.replace(/^git\+|\.git$/g, ''));
+  console.log(package.homepage);
   console.log('');
   console.log('  npm run $ cat.some file.js');
   console.log('  npm run $ -- bash.ls -la');
