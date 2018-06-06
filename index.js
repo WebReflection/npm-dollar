@@ -20,7 +20,16 @@ if (argv.length) {
   } else {
     spawn(
       'bash',
-      ['-c'].concat([].concat(exe).join('\n'), 'bash', argv.slice(1)),
+      ['-c'].concat([].concat(exe).map(
+        // if the exe was an array and it has arrays
+        // it joins arrays via && to grant succession
+        // of commands
+        // ['TMP=1', 'echo $TMP'] as `TMP=1\necho $TMP`
+        // ['TMP=1', ['echo $TMP', 'echo $1']] as `TMP=1\necho $TMP && echo $1`
+        function (cmd) {
+          return typeof cmd === 'string' ? cmd : cmd.join(' && ');
+        }
+      ).join('\n'), 'bash', argv.slice(1)),
       how
     );
   }

@@ -25,8 +25,14 @@ Following a configuration example:
       "ls": "ls"
     },
     "complex": [
+      // each entry is joined as new line
       "export TEST=123",
-      "echo $TEST"
+      "echo $TEST",
+      // arrays per line are joined via &&
+      [
+        "ls $TEST",
+        "cat $TEST"
+      ]
     ]
   }
 }
