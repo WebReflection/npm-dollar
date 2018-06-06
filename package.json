@@ -1,0 +1,22 @@
+{
+  "name": "npm-dollar",
+  "version": "0.0.0",
+  "description": "A package.json scripts helper.",
+  "bin": "index.js",
+  "$": {
+    "greetings": "echo Hello $(tput bold)\\$$(tput sgr0) !!!"
+  },
+  "scripts": {
+    "$": "./index.js",
+    "test": "npm run $ greetings"
+  },
+  "keywords": [
+    "package",
+    "helper",
+    "scripts",
+    "test",
+    "bash"
+  ],
+  "author": "Andrea Giammarchi",
+  "license": "ISC"
+}
