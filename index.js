@@ -6,21 +6,24 @@ var argv = process.argv.slice(2);
 if (argv.length) {
   var spawn = require('child_process').spawn;
   var package = require(path.join(process.cwd(), 'package.json'));
+  var how = {stdio: 'inherit'};
   var exe = argv[0].split('.').reduce(
     function (o, k) { return o[k]; },
     package.$ || package.scripts
   );
-  spawn(
-    'bash',
-    ['-c'].concat(
-      [].concat(exe).join('\n'),
+  if (typeof exe === 'string' && /^\S+$/.test(exe)) {
+    spawn(
+      exe,
+      argv.slice(1),
+      how
+    );
+  } else {
+    spawn(
       'bash',
-      argv.slice(1)
-    ),
-    {
-      stdio: 'inherit'
-    }
-  );
+      ['-c'].concat([].concat(exe).join('\n'), 'bash', argv.slice(1)),
+      how
+    );
+  }
 } else {
   var package = require(path.join(
     require.resolve('npm-dollar'),
