@@ -6,7 +6,7 @@
     "npm-dollar": "index.js"
   },
   "$": {
-    "greetings": "echo -e \"Hello \\x1b[1m\\$\\x1b[0m !!!\""
+    "greetings": "echo -e 'Hello \\033[1m$\\033[0m !!!'"
   },
   "scripts": {
     "$": "node index.js",
