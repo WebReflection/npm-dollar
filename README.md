@@ -49,3 +49,7 @@ npm run $ -- bash.ls -la
 ```
 
 The End.
+
+### Windows users
+
+Please [install chocolatey](https://chocolatey.org/install) and then `choco install git` to be able to use `bash` with, or without, the git shell.

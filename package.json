@@ -6,10 +6,10 @@
     "npm-dollar": "index.js"
   },
   "$": {
-    "greetings": "echo Hello $(tput bold)\\$$(tput sgr0) !!!"
+    "greetings": "echo -e \"Hello \\x1b[1m\\$\\x1b[0m !!!\""
   },
   "scripts": {
-    "$": "./index.js",
+    "$": "node index.js",
     "test": "npm run $ greetings"
   },
   "keywords": [
