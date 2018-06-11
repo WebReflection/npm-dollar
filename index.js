@@ -32,7 +32,7 @@ if (argv.length) {
         params.push(cmd.join(' '));
       else
         for (var key in cmd)
-        add(cmd[key]);
+        [].concat(cmd[key]).forEach(add);
     });
     spawn(
       'bash',
