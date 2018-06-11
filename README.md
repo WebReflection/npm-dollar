@@ -25,10 +25,10 @@ Following a configuration example:
       "ls": "ls"
     },
     "complex": [
-      // each entry is joined as new line
+      // each entry is joined as &&
       "export TEST=123",
       "echo $TEST",
-      // arrays per line are joined via &&
+      // arrays per line are joined via space
       [
         "ls $TEST",
         "cat $TEST"
