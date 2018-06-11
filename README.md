@@ -52,4 +52,6 @@ The End.
 
 ### Windows users
 
-Please [install chocolatey](https://chocolatey.org/install) and then `choco install git` to be able to use `bash` with, or without, the git shell.
+As long as there is a `bash` environment you should be good to go (WLS, Git for Windows, others).
+
+If not, consider [installing chocolatey](https://chocolatey.org/install) and then do `choco install git` to be able to use `bash` with, or without, the git shell.
