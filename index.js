@@ -23,18 +23,24 @@ if (argv.length) {
       how
     );
   } else {
+    var params = [];
+    [].concat(exe).forEach(function add(cmd) {
+      if (typeof cmd === 'string')
+        params.push(cmd);
+      // Arrays inside arrays are joined inline
+      else if (Array.isArray(cmd))
+        params.push(cmd.join(' '));
+      else
+        for (var key in cmd)
+        add(cmd[key]);
+    });
     spawn(
       'bash',
-      ['-c'].concat([].concat(exe).map(
-        // if the exe was an array and it has arrays
-        // it joins arrays via && to grant succession
-        // of commands
-        // ['TMP=1', 'echo $TMP'] as `TMP=1\necho $TMP`
-        // ['TMP=1', ['echo $TMP', 'echo $1']] as `TMP=1\necho $TMP && echo $1`
-        function (cmd) {
-          return typeof cmd === 'string' ? cmd : cmd.join(' && ');
-        }
-      ).join('\n'), 'bash', argv.slice(1)),
+      ['-c'].concat(
+        params.join(' && ').replace(/(^|;|\s)\$ /g, '$1npm run $ '),
+        'bash',
+        argv.slice(1)
+      ),
       how
     );
   }
@@ -48,6 +54,7 @@ if (argv.length) {
   console.log(package.homepage);
   console.log('');
   console.log('  npm run $ cat.some file.js');
+  console.log('  npm run $ cat file.js');
   console.log('  npm run $ -- bash.ls -la');
   console.log('');
   console.log(JSON.stringify({
@@ -56,7 +63,8 @@ if (argv.length) {
     },
     '$': {
       cat: {
-        some: 'cat $1'
+        some: 'cat $1',
+        list: 'ls $1'
       },
       bash: {
         ls: 'ls'
