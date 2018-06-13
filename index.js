@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
+var PACKAGE_NAME = 'npm-dollar';
+var PACKAGE_JSON = 'package.json';
+
 var path = require('path');
 var argv = process.argv.slice(2);
 var cwd = process.cwd();
 
 if (argv.length) {
   var spawn = require('child_process').spawn;
-  var package = require(path.join(cwd, 'package.json'));
+  var package = require(path.join(cwd, PACKAGE_JSON));
   var how = {
     cwd: cwd,
     env: process.env,
@@ -14,15 +17,14 @@ if (argv.length) {
   };
   var exe = argv[0].split('.').reduce(
     function (o, k) { return o[k]; },
-    package.$ || package['npm-dollar'] || package.scripts
+    package.$ || package[PACKAGE_NAME] || package.scripts
   );
+  // direct execution as in {"$": {"ls": "ls"}}
   if (typeof exe === 'string' && /^\S+$/.test(exe)) {
-    spawn(
-      exe,
-      argv.slice(1),
-      how
-    );
-  } else {
+    spawn(exe, argv.slice(1), how);
+  }
+  // indirect / normalized execution through bash -c
+  else {
     var params = [];
     [].concat(exe).forEach(function add(cmd) {
       if (typeof cmd === 'string')
@@ -37,7 +39,10 @@ if (argv.length) {
     spawn(
       'bash',
       ['-c'].concat(
-        params.join(' && ').replace(/(^|;|\s)\$ /g, '$1npm run $ '),
+        params.join(' && ').replace(
+          /(^|;|\s)\$ /g,
+          ('$1npm run ' + PACKAGE_NAME + ' ')
+        ),
         'bash',
         argv.slice(1)
       ),
@@ -46,9 +51,9 @@ if (argv.length) {
   }
 } else {
   var package = require(path.join(
-    require.resolve('npm-dollar'),
+    require.resolve(PACKAGE_NAME),
     '..',
-    'package.json'
+    PACKAGE_JSON
   ));
   console.log('\x1b[1m' + package.name + '\x1b[0m ' + package.version);
   console.log(package.homepage);
