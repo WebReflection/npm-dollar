@@ -41,7 +41,7 @@ if (argv.length) {
       ['-c'].concat(
         params.join(' && ').replace(
           /(^|;|\s)\$ /g,
-          ('$1npm run ' + PACKAGE_NAME + ' ')
+          ('$1npm run $ ')
         ),
         'bash',
         argv.slice(1)
