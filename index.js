@@ -8,47 +8,32 @@ var argv = process.argv.slice(2);
 var cwd = process.cwd();
 
 if (argv.length) {
-  var spawn = require('child_process').spawn;
-  var package = require(path.join(cwd, PACKAGE_JSON));
+  var childProcess = require('child_process');
   var how = {
     cwd: cwd,
     env: process.env,
     stdio: 'inherit'
   };
-  var exe = argv[0].split('.').reduce(
-    function (o, k) { return o[k]; },
-    package.$ || package[PACKAGE_NAME] || package.scripts
+  childProcess.exec(
+    process.platform === 'win32' ?
+      'where bash' : 'which bash',
+    how,
+    function (err, bash, stderr) {
+      if (err) {
+        childProcess.exec(
+          'npm config get script-shell',
+          function (err, bash, stderr) {
+            if (err || !bash) {
+              console.error(stderr || 'Unable to find an executable `bash`');
+              process.exit(1);
+            } else
+              run(childProcess.spawn, bash.trim(), how);
+          }
+        );
+      } else
+        run(childProcess.spawn, bash.trim(), how);
+    }
   );
-  // direct execution as in {"$": {"ls": "ls"}}
-  if (typeof exe === 'string' && /^\S+$/.test(exe)) {
-    spawn(exe, argv.slice(1), how);
-  }
-  // indirect / normalized execution through bash -c
-  else {
-    var params = [];
-    [].concat(exe).forEach(function add(cmd) {
-      if (typeof cmd === 'string')
-        params.push(cmd);
-      // Arrays inside arrays are joined inline
-      else if (Array.isArray(cmd))
-        params.push(cmd.join(' '));
-      else
-        for (var key in cmd)
-        [].concat(cmd[key]).forEach(add);
-    });
-    spawn(
-      'bash',
-      ['-c'].concat(
-        params.join(' && ').replace(
-          /(^|;|\s)\$ /g,
-          ('$1npm run $ ')
-        ),
-        'bash',
-        argv.slice(1)
-      ),
-      how
-    );
-  }
 } else {
   var package = require(path.join(
     require.resolve(PACKAGE_NAME),
@@ -77,4 +62,42 @@ if (argv.length) {
     }
   }, null, '  ').replace(/^/gm, '  '));
   console.log('');
+}
+
+function run(spawn, bash, how) {
+  var package = require(path.join(cwd, PACKAGE_JSON));
+  var exe = argv[0].split('.').reduce(
+    function (o, k) { return o[k]; },
+    package.$ || package[PACKAGE_NAME] || package.scripts
+  );
+  // direct execution as in {"$": {"ls": "ls"}}
+  if (typeof exe === 'string' && /^\S+$/.test(exe)) {
+    spawn(exe, argv.slice(1), how);
+  }
+  // indirect / normalized execution through bash -c
+  else {
+    var params = [];
+    [].concat(exe).forEach(function add(cmd) {
+      if (typeof cmd === 'string')
+        params.push(cmd);
+      // Arrays inside arrays are joined inline
+      else if (Array.isArray(cmd))
+        params.push(cmd.join(' '));
+      else
+        for (var key in cmd)
+        [].concat(cmd[key]).forEach(add);
+    });
+    spawn(
+      bash,
+      ['-c'].concat(
+        params.join(' && ').replace(
+          /(^|;|\s)\$ /g,
+          ('$1npm run $ ')
+        ),
+        bash,
+        argv.slice(1)
+      ),
+      how
+    );
+  }
 }
