@@ -54,7 +54,7 @@ npm run $ -- bash.ls -la
 npm --production run $ lint
 ```
 
-When either `--production` or `--only=production` _npm_ flags are used, any command that start with `!production` (read as _not production_) would simply be ignored.
+When either `--production`, `--prod`, or `--only=production` and `--only=prod` _npm_ flags are used, any command that start with either `!prod` or `!production` (read as _not production_) would simply be ignored.
 
 The End.
 

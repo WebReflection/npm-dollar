@@ -2,8 +2,8 @@
 
 var PACKAGE_NAME = 'npm-dollar';
 var PACKAGE_JSON = 'package.json';
-var RE_PRODUCTION = /^\!production\s/;
-var IS_PRODUCTION = process.env.npm_config_only === 'production' ||
+var RE_PRODUCTION = /^\!prod(?:uction)?\b\s*/;
+var IS_PRODUCTION = /^prod(?:uction)?$/i.test(process.env.npm_config_only) ||
                     !!process.env.npm_config_production;
 
 var path = require('path');
