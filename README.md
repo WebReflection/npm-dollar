@@ -1,6 +1,6 @@
 # npm-dollar
 
-A package.json scripts helper.
+A `package.json` scripts helper.
 
 ### wut
 
@@ -20,6 +20,9 @@ Following a configuration example:
   "$": {
     "cat": {
       "some": "cat $1"
+    },
+    "lint": {
+      "js": "!production eslint index.js"
     },
     "bash": {
       "ls": "ls"
@@ -46,7 +49,12 @@ npm run $ cat.some file.js
 
 # or passing along all arguments
 npm run $ -- bash.ls -la
+
+# or skipping production
+npm --production run $ lint
 ```
+
+When either `--production` or `--only=production` _npm_ flags are used, any command that start with `!production` (read as _not production_) would simply be ignored.
 
 The End.
 

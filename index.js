@@ -2,6 +2,9 @@
 
 var PACKAGE_NAME = 'npm-dollar';
 var PACKAGE_JSON = 'package.json';
+var RE_PRODUCTION = /^\!production\s/;
+var IS_PRODUCTION = process.env.npm_config_only === 'production' ||
+                    !!process.env.npm_config_production;
 
 var path = require('path');
 var argv = process.argv.slice(2);
@@ -64,6 +67,14 @@ if (argv.length) {
   console.log('');
 }
 
+function dropProduction(command) {
+  return command.replace(RE_PRODUCTION, '');
+}
+
+function notProduction(command) {
+  return IS_PRODUCTION ? !RE_PRODUCTION.test(command) : true;
+}
+
 function run(spawn, bash, how) {
   var package = require(path.join(cwd, PACKAGE_JSON));
   var exe = argv[0].split('.').reduce(
@@ -85,15 +96,19 @@ function run(spawn, bash, how) {
         params.push(cmd.join(' '));
       else
         for (var key in cmd)
-        [].concat(cmd[key]).forEach(add);
+          [].concat(cmd[key]).forEach(add);
     });
     spawn(
       bash,
       ['-c'].concat(
-        params.join(' && ').replace(
-          /(^|;|\s)\$ /g,
-          ('$1npm run $ ')
-        ),
+        params
+          .filter(notProduction)
+          .map(dropProduction)
+          .join(' && ')
+          .replace(
+            /(^|;|\s)\$ /g,
+            ('$1npm run $ ')
+          ),
         bash,
         argv.slice(1)
       ),
