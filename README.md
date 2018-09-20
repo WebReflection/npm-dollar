@@ -2,6 +2,10 @@
 
 A `package.json` scripts helper.
 
+### New in V2
+
+`npm-dollar` is now super greedy in exiting the execution as soon as something goes wrong.
+
 ### wut
 
 It simplifies organization of `package.json` scripts using `bash`, instead of `sh`, and passing escaped arguments all along.

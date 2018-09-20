@@ -6,7 +6,9 @@
     "npm-dollar": "index.js"
   },
   "$": {
-    "greetings": "!prod echo -e 'Hello \\033[1m$\\033[0m !!!'"
+    "fail": "lint ./index.js",
+    "greetings": "!prod echo -e 'Hello \\033[1m$\\033[0m !!!'",
+    "wrong": "$ greetings.what.ever"
   },
   "scripts": {
     "$": "node index.js",

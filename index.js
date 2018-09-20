@@ -15,7 +15,7 @@ if (argv.length) {
   var how = {
     cwd: cwd,
     env: process.env,
-    stdio: 'inherit'
+    stdio: ['inherit', 'inherit', 'pipe']
   };
   childProcess.exec(
     process.platform === 'win32' ?
@@ -71,6 +71,11 @@ function dropProduction(command) {
   return command.replace(RE_PRODUCTION, '');
 }
 
+function error(name) {
+  console.error('\x1B[31mERR!\x1B[0m unable to execute \x1B[1m' + name + '\x1B[0m');
+  process.exit(1);
+}
+
 function notProduction(command) {
   return IS_PRODUCTION ? !RE_PRODUCTION.test(command) : true;
 }
@@ -78,15 +83,19 @@ function notProduction(command) {
 function run(spawn, bash, how) {
   var package = require(path.join(cwd, PACKAGE_JSON));
   var exe = argv[0].split('.').reduce(
-    function (o, k) { return o[k]; },
+    function (o, k) {
+      if (o[k] == null)
+        error(argv[0]);
+      return o[k];
+    },
     package.$ || package[PACKAGE_NAME] || package.scripts
   );
   // direct execution as in {"$": {"ls": "ls"}}
   if (typeof exe === 'string' && /^\S+$/.test(exe)) {
-    spawn(exe, argv.slice(1), how);
+    spawn(exe, argv.slice(1), how).stderr.on('data', stderror);
   }
   // indirect / normalized execution through bash -c
-  else {
+  else if (exe) {
     var params = [];
     [].concat(exe).forEach(function add(cmd) {
       if (typeof cmd === 'string')
@@ -113,6 +122,14 @@ function run(spawn, bash, how) {
         argv.slice(1)
       ),
       how
-    );
+    ).stderr.on('data', stderror);
   }
+  // nothing to do, show there's an error
+  else
+    error(argv[0]);
+}
+
+function stderror(data) {
+  console.error('\x1B[31mERR!\x1B[0m ' + data);
+  process.exit(1);
 }
