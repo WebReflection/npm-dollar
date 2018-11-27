@@ -139,5 +139,5 @@ function exitOnError(code) {
 }
 
 function stderror(data) {
-  console.error('\x1B[31mERR!\x1B[0m ' + data);
+  console.error(data.toString().trim());
 }
