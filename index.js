@@ -15,7 +15,7 @@ if (argv.length) {
   var how = {
     cwd: cwd,
     env: process.env,
-    stdio: ['inherit', 'inherit', 'pipe']
+    stdio: ['inherit', 'inherit', 'inherit']
   };
   childProcess.exec(
     process.platform === 'win32' ?
@@ -92,9 +92,7 @@ function run(spawn, bash, how) {
   );
   // direct execution as in {"$": {"ls": "ls"}}
   if (typeof exe === 'string' && /^\S+$/.test(exe)) {
-    spawn(exe, argv.slice(1), how)
-      .on('exit', exitOnError)
-      .stderr.on('data', stderror);
+    spawn(exe, argv.slice(1), how).on('exit', exitOnError);
   }
   // indirect / normalized execution through bash -c
   else if (exe) {
@@ -124,9 +122,7 @@ function run(spawn, bash, how) {
         argv.slice(1)
       ),
       how
-    )
-    .on('exit', exitOnError)
-    .stderr.on('data', stderror);
+    ).on('exit', exitOnError);
   }
   // nothing to do, show there's an error
   else
@@ -136,8 +132,4 @@ function run(spawn, bash, how) {
 function exitOnError(code) {
   if (code)
     process.exit(1);
-}
-
-function stderror(data) {
-  console.error(data.toString().trim());
 }
