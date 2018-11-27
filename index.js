@@ -92,7 +92,9 @@ function run(spawn, bash, how) {
   );
   // direct execution as in {"$": {"ls": "ls"}}
   if (typeof exe === 'string' && /^\S+$/.test(exe)) {
-    spawn(exe, argv.slice(1), how).stderr.on('data', stderror);
+    spawn(exe, argv.slice(1), how)
+      .on('exit', exitOnError)
+      .stderr.on('data', stderror);
   }
   // indirect / normalized execution through bash -c
   else if (exe) {
@@ -122,11 +124,18 @@ function run(spawn, bash, how) {
         argv.slice(1)
       ),
       how
-    ).stderr.on('data', stderror);
+    )
+    .on('exit', exitOnError)
+    .stderr.on('data', stderror);
   }
   // nothing to do, show there's an error
   else
     error(argv[0]);
+}
+
+function exitOnError(code) {
+  if (code)
+    process.exit(1);
 }
 
 function stderror(data) {
