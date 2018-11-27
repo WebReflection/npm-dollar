@@ -1,6 +1,6 @@
 {
   "name": "npm-dollar",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "A package.json scripts helper.",
   "bin": {
     "npm-dollar": "index.js"
