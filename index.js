@@ -2,7 +2,7 @@
 
 var PACKAGE_NAME = 'npm-dollar';
 var PACKAGE_JSON = 'package.json';
-var RE_COMMENT = /^# /;
+var RE_COMMENT = /^#/;
 var RE_PRODUCTION = /^\!prod(?:uction)?\b\s*/;
 var IS_PRODUCTION = /^prod(?:uction)?$/i.test(process.env.npm_config_only) ||
                     !!process.env.npm_config_production;
