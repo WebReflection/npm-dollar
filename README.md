@@ -26,7 +26,11 @@ Following a configuration example:
       "some": "cat $1"
     },
     "lint": {
-      "js": "!production eslint index.js"
+      "js": [
+        // single line bash comments are allowed too
+        "# !production is needed to avoid issue in CI",
+        "!production eslint index.js"
+      ]
     },
     "bash": {
       "ls": "ls"
@@ -37,7 +41,7 @@ Following a configuration example:
       "echo $TEST",
       // arrays per line are joined via space
       [
-        "ls $TEST",
+        "ls $TEST;",
         "cat $TEST"
       ]
     ]

@@ -2,6 +2,7 @@
 
 var PACKAGE_NAME = 'npm-dollar';
 var PACKAGE_JSON = 'package.json';
+var RE_COMMENT = /^# /;
 var RE_PRODUCTION = /^\!prod(?:uction)?\b\s*/;
 var IS_PRODUCTION = /^prod(?:uction)?$/i.test(process.env.npm_config_only) ||
                     !!process.env.npm_config_production;
@@ -76,6 +77,14 @@ function error(name) {
   process.exit(1);
 }
 
+function commandFilter(command) {
+  return notComment(command) && notProduction(command);
+}
+
+function notComment(command) {
+  return !RE_COMMENT.test(command);
+}
+
 function notProduction(command) {
   return IS_PRODUCTION ? !RE_PRODUCTION.test(command) : true;
 }
@@ -111,7 +120,7 @@ function run(spawn, bash, how) {
       bash,
       ['-c'].concat(
         params
-          .filter(notProduction)
+          .filter(commandFilter)
           .map(dropProduction)
           .join(' && ')
           .replace(
