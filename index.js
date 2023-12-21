@@ -20,7 +20,7 @@ if (argv.length) {
   };
   childProcess.exec(
     process.platform === 'win32' ?
-      'where bash' : 'which bash',
+      'echo bash' : 'which bash',
     how,
     function (err, bash, stderr) {
       if (err) {
